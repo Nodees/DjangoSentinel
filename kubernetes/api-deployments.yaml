@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: app
+          image: sentinel:latest
+          imagePullPolicy: Never
+          command: [ "/bin/sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
+          workingDir: /usr/src/app
+          ports:
+            - containerPort: 8000

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-sentinel
+  namespace: default
+spec:
+  serviceName: redis-sentinel-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis-sentinel
+  template:
+    metadata:
+      labels:
+        app: redis-sentinel
+    spec:
+      volumes:
+        - name: config-readonly
+          configMap:
+            name: config
+        - name: sentinel-config
+          emptyDir: { }
+      initContainers:
+        - name: copy-sentinel-config
+          image: busybox
+          command: [ "sh", "-c", "cp /config/sentinel.conf /sentinel/sentinel.conf" ]
+          volumeMounts:
+            - mountPath: /config
+              name: config-readonly
+            - mountPath: /sentinel
+              name: sentinel-config
+      containers:
+        - name: sentinel
+          image: redis:7
+          command: [ "redis-server", "/etc/sentinel/sentinel.conf", "--sentinel" ]
+          ports:
+            - containerPort: 26379
+          volumeMounts:
+            - name: sentinel-config
+              mountPath: /etc/sentinel

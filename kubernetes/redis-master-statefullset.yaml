@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-master
+  namespace: default
+spec:
+  serviceName: redis-master-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-master
+  template:
+    metadata:
+      labels:
+        app: redis-master
+    spec:
+      containers:
+        - name: redis
+          image: redis:7
+          command: ["redis-server", "/usr/local/etc/redis/master.conf"]
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-master-config
+              mountPath: /usr/local/etc/redis
+      volumes:
+        - name: redis-master-config
+          configMap:
+            name: config

@@ -1,0 +1,9 @@
+resources:
+  - configmap.yaml
+  - redis-sentinel-service.yaml
+  - redis-master-service.yaml
+  - redis-replica-service.yaml
+  - redis-master-statefullset.yaml
+  - redis-replica-statefullset.yaml
+  - redis-sentinel-statefullset.yaml
+  - api-deployments.yaml
