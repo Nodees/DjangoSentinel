@@ -4,3 +4,6 @@ K8s. Below is the command to build a test application:
 ````shell
 docker build -t sentinel:latest -f Dcokerfile .
 ````
+````shell
+kubectl apply -k ./kubernetes
+````
